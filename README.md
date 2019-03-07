@@ -21,7 +21,7 @@ r         |  no     |
 ruby      |  no     |
 rust      |  no     |
 scala     |  no     |
-swift4    |  yes    |
+swift4    |  no     |
 
 ## Supported APIs
 
@@ -34,15 +34,5 @@ Currently the following APIs are supported
 
 
 ## Specification file:
-The `ul_api_spec_openapi3_v2_0_0` contains the specifiation of our LocationAPI. It is written in OpenAPI 3.0.
+The `ul_api_spec_openapi3_v2_0_0` contains the specifiation of LocationAPI. It is written in OpenAPI 3.0.
 
-## Generate libraries:
-The script `create.sh` is used generate libraries in various languages.
-
-### Update all clients
-
-./create.sh
-
-### Update one client of your choice
-
-./create.sh [yourlanguage]

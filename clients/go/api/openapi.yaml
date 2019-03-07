@@ -1,0 +1,807 @@
+openapi: 3.0.0
+info:
+  description: Geolocation, Geocoding and Maps
+  title: Location API
+  version: 2.0.0
+servers:
+- url: https://us1.unwiredlabs.com/v2
+paths:
+  /process.php:
+    post:
+      description: The Geolocation API helps developers locate IoT, M2M and other connected devices anywhere in the world without GPS. The device first sends the API data about which Cellular networks and WiFi networks it can see nearby. The API then uses Unwired Labs’ large datasets of Cell towers, WiFi networks backed by numerous algorithms to calculate and return the device’s location
+      operationId: Geolocation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/geolocation_schema'
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/geolocate_response_schema'
+                - $ref: '#/components/schemas/geolocate_error_schema'
+          description: OK
+      summary: Geolocation
+      tags:
+      - GEOLOCATION
+  /search.php:
+    get:
+      description: The Search API allows converting addresses, such as a street address, into geographic coordinates (latitude and longitude). These coordinates can serve various use-cases, from placing markers on a map to helping algorithms determine nearby bus stops. This process is also known as Forward Geocoding.
+      operationId: search
+      parameters:
+      - description: Address to geocode
+        example: '"Statue of Liberty"'
+        explode: true
+        in: query
+        name: q
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 'The preferred area to find search results.  To restrict results
+          to those within the viewbox, use along with the bounded option. Tuple of
+          4 floats. Any two corner points of the box - `max_lon,max_lat,min_lon,min_lat`
+          or `min_lon,min_lat,max_lon,max_lat` - are accepted in any order as long
+          as they span a real box. '
+        example: '"-132.84908,47.69382,-70.44674,30.82531"'
+        explode: true
+        in: query
+        name: viewbox
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Limit the number of returned results. Default is 10.
+        example: 10
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int64
+          type: integer
+        style: form
+      - description: Preferred language order for showing search results, overrides the value specified in the Accept-Language HTTP header. Defaults to en. To use native language for the response when available, use accept-language=native
+        example: '"en"'
+        explode: true
+        in: query
+        name: accept-language
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Limit search to a list of countries.
+        example: '"us"'
+        explode: true
+        in: query
+        name: countrycodes
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/search_response_schema'
+                - $ref: '#/components/schemas/error_schema'
+          description: OK
+      security:
+      - token: []
+      summary: Forward Geocoding
+      tags:
+      - SEARCH
+  /reverse.php:
+    get:
+      description: Reverse geocoding is the process of converting a coordinate or location (latitude, longitude) to a readable address or place name. This permits the identification of nearby street addresses, places, and/or area subdivisions such as a neighborhood, county, state, or country.
+      operationId: reverse
+      parameters:
+      - description: Latitude of the location to generate an address for.
+        example: 17.24
+        explode: true
+        in: query
+        name: lat
+        required: true
+        schema:
+          format: double
+          maximum: 90
+          minimum: -90
+          type: number
+        style: form
+      - description: Longitude of the location to generate an address for.
+        example: 74.25
+        explode: true
+        in: query
+        name: lon
+        required: true
+        schema:
+          format: double
+          maximum: 180
+          minimum: -180
+          type: number
+        style: form
+      - description: Zoom value lies between 0-18. Level of detail required where 0 is country and 18 is house/building
+        example: 2
+        explode: true
+        in: query
+        name: zoom
+        required: false
+        schema:
+          format: int64
+          maximum: 18
+          minimum: 0
+          type: integer
+        style: form
+      - description: Preferred language order for showing search results, overrides the value specified in the Accept-Language HTTP header. Defaults to en. To use native language for the response when available, use accept-language=native
+        example: '"Empire state building"'
+        explode: true
+        in: query
+        name: accept-language
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/reverse_response_schema'
+                - $ref: '#/components/schemas/error_schema'
+          description: OK
+      security:
+      - token: []
+      summary: Reverse Geocoding
+      tags:
+      - REVERSE
+  /timezone.php:
+    get:
+      description: The Unwired Labs TimeZone API provides time offset data for locations on the surface of the earth.
+      operationId: timezone
+      parameters:
+      - description: lattitude of the location
+        example: 40.6892474
+        explode: true
+        in: query
+        name: lat
+        required: true
+        schema:
+          format: double
+          type: number
+        style: form
+      - description: longitude of location
+        example: -74.0445404280149
+        explode: true
+        in: query
+        name: lon
+        required: true
+        schema:
+          format: double
+          type: number
+        style: form
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/timezone_response_schema'
+          description: timezone response
+      security:
+      - token: []
+      summary: timezone
+      tags:
+      - Timezone
+  /balance.php:
+    get:
+      description: The Balance API provides a count of request credits left in the user's account for the day. Balance is reset at midnight UTC everyday (00:00 UTC).
+      operationId: balance
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/balance_response_schema'
+                - $ref: '#/components/schemas/error_schema'
+          description: OK
+      security:
+      - token: []
+      summary: balance
+      tags:
+      - BALANCE
+components:
+  schemas:
+    geolocation_schema:
+      properties:
+        token:
+          example: YOUR_API_TOKEN
+          title: token
+          type: string
+        id:
+          description: ID of the device, in case you are in a per-device plan. This could be any unique string such as an IMEI, IMSI, phone number or a hash of any of the previous values, etc. Maximum accepted length is 20 chars, and values should only be alphanumeric (a-z, 0-9)
+          example: IMEI number
+          title: id
+          type: string
+        radio:
+          $ref: '#/components/schemas/radio_schema'
+        mcc:
+          description: '"Mobile Country Code of your operator’s network represented
+            by an integer (Optional). Range: 0 to 999."'
+          example: 310
+          format: int64
+          title: mcc
+          type: integer
+        mnc:
+          description: 'Mobile Network Code of your operator’s network represented
+            by an integer (Optional). Range: 0 to 999. On CDMA, provide the System
+            ID or SID, with range: 1 to 32767.'
+          example: 404
+          format: int64
+          title: mnc
+          type: integer
+        cells:
+          description: An array of cell ID objects
+          items:
+            $ref: '#/components/schemas/cell_schema'
+          type: array
+        wifi:
+          description: An array of WiFi objects visible to the device.
+          items:
+            $ref: '#/components/schemas/wifi_schema'
+          type: array
+        fallbacks:
+          $ref: '#/components/schemas/fallback_schema'
+        address:
+          $ref: '#/components/schemas/geolocation_address_schema'
+        ip:
+          description: IP address of device.
+          example: 49.204.218.106
+          title: ip address
+          type: string
+        bt:
+          $ref: '#/components/schemas/bt_schema'
+      title: Geolocation
+      type: object
+    token_schema:
+      example: YOUR_API_TOKEN
+      title: token
+      type: string
+    id_schema:
+      description: ID of the device, in case you are in a per-device plan. This could be any unique string such as an IMEI, IMSI, phone number or a hash of any of the previous values, etc. Maximum accepted length is 20 chars, and values should only be alphanumeric (a-z, 0-9)
+      example: IMEI number
+      title: id
+      type: string
+    radio_schema:
+      description: Radio type of the device. Supported values are ‘gsm’, ‘cdma’, ‘umts’ and ‘lte’. This field should be included for more accurate results.
+      enum:
+      - '"gsm"'
+      - '"utms"'
+      - '"cdma"'
+      - '"lte"'
+      example: gsm
+      title: radio
+      type: string
+    mcc_schema:
+      description: '"Mobile Country Code of your operator’s network represented by
+        an integer (Optional). Range: 0 to 999."'
+      example: 310
+      format: int64
+      title: mcc
+      type: integer
+    mnc_schema:
+      description: 'Mobile Network Code of your operator’s network represented by
+        an integer (Optional). Range: 0 to 999. On CDMA, provide the System ID or
+        SID, with range: 1 to 32767.'
+      example: 404
+      format: int64
+      title: mnc
+      type: integer
+    cell_schema:
+      description: You can send 1 to 7 cell ID objects. If your device supports scanning for more than 7 cell objects, reach out to us and we’ll increase this limit on your account. The first cell object has to be that of the serving cell, i.e. the tower the device is connected to. The others are neighbouring cell objects that are visible to the device. Except lac and cid all other parameters mentioned below are optional. Parameters vary depending on the radio type. Supported radio types and their corresponding parameters are
+      properties:
+        lac:
+          description: the Location Area Code of your operator’s network.
+          example: 7033
+          format: int64
+          maximum: 65533
+          minimum: 1
+          type: integer
+        cid:
+          description: Cell ID
+          example: 17811
+          format: int64
+          maximum: 268435455
+          minimum: 0
+          type: integer
+        radio:
+          $ref: '#/components/schemas/radio_schema'
+        mcc:
+          description: '"Mobile Country Code of your operator’s network represented
+            by an integer (Optional). Range: 0 to 999."'
+          example: 310
+          format: int64
+          title: mcc
+          type: integer
+        mnc:
+          description: 'Mobile Network Code of your operator’s network represented
+            by an integer (Optional). Range: 0 to 999. On CDMA, provide the System
+            ID or SID, with range: 1 to 32767.'
+          example: 404
+          format: int64
+          title: mnc
+          type: integer
+        signal:
+          description: Signal Strength (RSSI)
+          example: -51
+          format: int64
+          maximum: -25
+          minimum: -121
+          type: integer
+        psc:
+          description: Primary Scrambling Code
+          example: 51
+          format: int64
+          maximum: 503
+          minimum: 0
+          type: integer
+        asu:
+          description: Arbitrary Strength Unit
+          example: 56
+          format: int64
+          maximum: 97
+          minimum: -5
+          type: integer
+        ta:
+          description: Timing Advance
+          example: 0
+          format: int64
+          maximum: 63
+          minimum: 0
+          type: integer
+      required:
+      - token
+      title: cell
+      type: object
+    lac_schema:
+      description: the Location Area Code of your operator’s network.
+      example: 7033
+      format: int64
+      maximum: 65533
+      minimum: 1
+      type: integer
+    cid_schema:
+      description: Cell ID
+      example: 17811
+      format: int64
+      maximum: 268435455
+      minimum: 0
+      type: integer
+    signal_schema:
+      description: Signal Strength (RSSI)
+      example: -51
+      format: int64
+      maximum: -25
+      minimum: -121
+      type: integer
+    psc_schema:
+      description: Primary Scrambling Code
+      example: 51
+      format: int64
+      maximum: 503
+      minimum: 0
+      type: integer
+    asu_schema:
+      description: Arbitrary Strength Unit
+      example: 56
+      format: int64
+      maximum: 97
+      minimum: -5
+      type: integer
+    ta_schema:
+      description: Timing Advance
+      example: 0
+      format: int64
+      maximum: 63
+      minimum: 0
+      type: integer
+    wifi_schema:
+      description: You can send a minimum of 2 and a maximum of 15 WiFi objects in 1 request. If WiFi is not available, wifi object can be omitted all together. In accordance with our industry’s privacy standards we require a minimum of 2 valid nearby Access Points to be sent. If your use-case allows only 1 AP, reach out to us.
+      properties:
+        bssid:
+          description: 'Basic Service Set Identifier or MAC address of the Access
+            Point. Typical format of a MAC address is xx-xx-xx-xx-xx-xx. However,
+            the delimiter can be any of these when sent to the API: : or - or .'
+          example: 00:17:c5:cd:ca:aa
+          type: string
+        channel:
+          description: Channel the WiFi network is operating in (optional)
+          example: 11
+          format: int64
+          type: integer
+        frequency:
+          description: Frequency the WiFi network is operating in (MHz) (optional)
+          example: 2412
+          format: int64
+          type: integer
+        signal:
+          description: Signal Strength (RSSI)
+          example: -51
+          format: int64
+          maximum: -25
+          minimum: -121
+          type: integer
+        signalToNoiseRatio:
+          description: The current signal to noise ratio, measured in dB (optional)
+          example: 1
+          format: int64
+          type: integer
+      title: wifi
+      type: object
+    bssid_schema:
+      description: 'Basic Service Set Identifier or MAC address of the Access Point.
+        Typical format of a MAC address is xx-xx-xx-xx-xx-xx. However, the delimiter
+        can be any of these when sent to the API: : or - or .'
+      example: 00:17:c5:cd:ca:aa
+      type: string
+    channel_schema:
+      description: Channel the WiFi network is operating in (optional)
+      example: 11
+      format: int64
+      type: integer
+    frequency_schema:
+      description: Frequency the WiFi network is operating in (MHz) (optional)
+      example: 2412
+      format: int64
+      type: integer
+    signalToNoiseRatio_schema:
+      description: The current signal to noise ratio, measured in dB (optional)
+      example: 1
+      format: int64
+      type: integer
+    geolocation_address_schema:
+      description: The physical address of the returned location
+      enum:
+      - 0
+      - 1
+      - 2
+      example: 1
+      format: int64
+      title: physical address
+      type: integer
+    fallback_schema:
+      description: An array of fallback options to enable or disable.
+      properties:
+        all:
+          $ref: '#/components/schemas/all_schema'
+        ipf:
+          $ref: '#/components/schemas/ipf_schema'
+        lacf:
+          $ref: '#/components/schemas/lacf_schema'
+        scf:
+          $ref: '#/components/schemas/scf_schema'
+      title: fallback
+      type: object
+    all_schema:
+      description: Enable or disable all fallbacks.
+      enum:
+      - 0
+      - 1
+      example: 1
+      format: int32
+      type: integer
+    ipf_schema:
+      description: Enable IP address fallback. Specify IP address of the device in the “ip” field if it’s different from the device making the API call.
+      enum:
+      - 0
+      - 1
+      example: 1
+      format: int32
+      type: integer
+    lacf_schema:
+      description: Enable LAC fallback. If we are unable to locate a cell, we will return an approzimate location based on nearby cells in our database.
+      enum:
+      - 0
+      - 1
+      - 2
+      example: 1
+      format: int32
+      type: integer
+    scf_schema:
+      description: Enable Short CID fallback. Adds support for devices that can only see 16-bit (short) CID of an UMTS 28-bit UTRAN CID.
+      enum:
+      - 0
+      - 1
+      example: 0
+      format: int32
+      type: integer
+    ip_schema:
+      description: IP address of device.
+      example: 49.204.218.106
+      title: ip address
+      type: string
+    bt_schema:
+      default: 1
+      description: Specify level of strictness to apply to Borders
+      enum:
+      - 0
+      - 1
+      - 2
+      example: 1
+      format: int32
+      title: Border Threshold
+      type: integer
+    status_schema:
+      description: If the request is successful, ok is returned. Otherwise error is returned
+      example: error
+      title: status
+      type: string
+    message_schema:
+      description: Any additional information from the server is returned here
+      example: INVALID_TOKEN
+      type: string
+    geolocation_response_schema:
+      description: The response will be a JSON object.
+      properties:
+        status:
+          description: If the request is successful, ok is returned. Otherwise error is returned
+          example: error
+          title: status
+          type: string
+        message:
+          description: Any additional information from the server is returned here
+          example: INVALID_TOKEN
+          type: string
+        balance:
+          description: This represents the remaining balance on the API token. Requests that return error are not charged and do not affect balance
+          example: 99585
+          format: int64
+          type: integer
+        balance_slots:
+          description: This represents the remaining balance of device slots. Requests that return error are not charged and do not affect balance. If -1 is returned, then observe it as an error while calculating slots balance. This element will only exist if you are on a device plan.
+          example: 2
+          format: int64
+          type: integer
+        lat:
+          description: The latitude representing the location
+          example: 39.56763197
+          format: double
+          type: number
+        lon:
+          description: The longitude representing the location
+          example: -105.00727917
+          format: double
+          type: number
+        accuracy:
+          description: The accuracy of the position is returned in meters
+          example: 10
+          format: int64
+          type: integer
+        address:
+          description: The physical address of the location
+          example: High Line Canal Trail, Littleton, CO 80120, USA
+          type: string
+        address_details:
+          $ref: '#/components/schemas/address_details_schema'
+        aged:
+          description: Shown when the location is based on a single measurement or those older than 90 days or is an LAC fallback
+          example: 0
+          format: int32
+          type: integer
+        fallback:
+          $ref: '#/components/schemas/fallback_schema'
+      title: Geolocation response
+    address_details_schema:
+      description: The API only returns components that have valid values for a location. Component town is normalized to city to make things simple
+      properties:
+        area:
+          example: '"5th Avenue"'
+          type: string
+        locality:
+          example: '"Korea Town"'
+          type: string
+        district:
+          example: '"Manhattan"'
+          type: string
+        county:
+          example: '"New York County"'
+          type: string
+        city:
+          example: '"New York City"'
+          type: string
+        state:
+          example: '"New York"'
+          type: string
+        country:
+          example: '"United States of America"'
+          type: string
+        country_code:
+          example: '"US"'
+          type: string
+        postal_code:
+          example: '"80120"'
+          type: string
+      title: address_details
+      type: object
+    geolocation_error_schema:
+      properties:
+        status:
+          description: If the request is successful, ok is returned. Otherwise error is returned
+          example: error
+          title: status
+          type: string
+        message:
+          description: Any additional information from the server is returned here
+          example: INVALID_TOKEN
+          type: string
+        balance:
+          description: This represents the remaining balance on the API token. Requests that return error are not charged and do not affect balance.
+          example: 0
+          format: int64
+          type: integer
+      title: geolocation error response
+      type: object
+    search_response_schema:
+      properties:
+        status:
+          description: If the request is successful, ok is returned. Otherwise error is returned
+          example: error
+          title: status
+          type: string
+        balance:
+          description: Balance left in the account
+          example: 0
+          type: number
+        addresses:
+          description: Array of Address objects found for the search query
+          items:
+            $ref: '#/components/schemas/address_schema'
+          type: array
+      title: Search Response
+      type: object
+    reverse_response_schema:
+      properties:
+        status:
+          description: If the request is successful, ok is returned. Otherwise error is returned
+          example: error
+          title: status
+          type: string
+        balance:
+          description: Balance left in the account
+          example: 0
+          format: int64
+          type: integer
+        address:
+          $ref: '#/components/schemas/address_schema'
+      title: Reverse Geocoding Response
+      type: object
+    address_schema:
+      description: Address object found for the search query
+      properties:
+        lat:
+          description: Latitude of the given location (decimal)
+          example: '"41.3438648"'
+          type: string
+        lon:
+          description: Longitude of the given location (decimal)
+          example: '"-86.3111653"'
+          type: string
+        display_name:
+          description: Matched Address name for the given location
+          example: '"Southpark Lane, Littleton,Arapahoe county, colorado, 800"'
+          type: string
+        house_number:
+          description: House Number
+          type: string
+        road:
+          description: Road Name
+          example: '"Southpark Lane"'
+          type: string
+        neighborhood:
+          description: Neighbourhood
+          type: string
+        suburb:
+          description: Suburb
+          type: string
+        city:
+          description: City name (normalized form of city, town, village, hamlet)
+          example: '"Denver-Aurora-Lakewood"'
+          type: string
+        county:
+          description: County name (normalized form of county, state_district)
+          type: string
+        country:
+          description: Country name
+          example: '"United States of america"'
+          type: string
+        country_code:
+          description: Country code
+          example: '"US"'
+          type: string
+        postal_code:
+          description: Postal code
+          example: '"80120"'
+          type: string
+      title: address
+      type: object
+    balance_response_schema:
+      properties:
+        status:
+          description: If the request is successful, ok is returned. Otherwise error is returned
+          example: error
+          title: status
+          type: string
+        balance_geolocation:
+          description: Remaining balance left in the account for geolocation requests
+          example: 45
+          format: int64
+          type: integer
+        balance_geocoding:
+          description: Remaining balance left in the account for geocoding requests
+          example: 55
+          format: int64
+          type: integer
+      title: Balance Response
+      type: object
+    error_schema:
+      properties:
+        status:
+          description: If the request is successful, ok is returned. Otherwise error is returned
+          example: error
+          title: status
+          type: string
+        message:
+          description: Any additional information from the server is returned here
+          example: INVALID_TOKEN
+          type: string
+      title: error
+      type: object
+    timezone_response_schema:
+      properties:
+        status:
+          description: If the request is successful, ok is returned. Otherwise error is returned
+          example: error
+          title: status
+          type: string
+        balance:
+          description: Balance left in the account
+          format: int64
+          title: balance
+          type: integer
+        timezone:
+          $ref: '#/components/schemas/timezone_schema'
+      type: object
+    timezone_schema:
+      description: Timezone object found for the location.
+      properties:
+        short_name:
+          description: Short name of the Timezone
+          title: short name
+          type: string
+        offset_sec:
+          description: The offset from UTC (in seconds) for the given location. Considers DST savings.
+          title: offset sec
+          type: number
+        now_in_dst:
+          description: Represents whether the zone currently observing DST or not
+          title: now in dst
+          type: string
+        name:
+          description: Timezone name of the Location
+          title: Timezone name
+          type: string
+      title: timezone
+      type: object
+  securitySchemes:
+    token:
+      in: query
+      name: token
+      type: apiKey
