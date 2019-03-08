@@ -33,6 +33,24 @@ Currently the following APIs are supported
  * Balance API
 
 
-## Specification file:
+ ## Specification file:
 The `ul_api_spec_openapi3_v2_0_0` contains the specifiation of LocationAPI. It is written in OpenAPI 3.0.
+
+
+ ## Generate libraries:
+* The script `generate.sh` is compiled with necessary options to help build a client library.
+
+* To generate all clients:
+
+        ./generate.sh
+
+* To generate 1 client:
+
+        ./generate.sh [language]
+
+
+    
+
+
+
 

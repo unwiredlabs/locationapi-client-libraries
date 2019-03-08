@@ -95,7 +95,7 @@ paths:
   
       responses:
         '200':
-          description: OK
+          description: The response will be a JSON object.
           content:
             application/json:
               schema:
@@ -165,7 +165,7 @@ paths:
 
       responses:
         '200':
-          description: OK
+          description: The response will be a JSON object.
           content:
             application/json:
               schema:
@@ -185,7 +185,7 @@ paths:
       tags: 
         - Timezone
       parameters:
-        - name: lat
+        - name: lattitude
           in: query
           description: lattitude of the location
           required: true
@@ -194,7 +194,7 @@ paths:
             format: double
           example: 40.6892474
 
-        - name: lon
+        - name: longitude
           in: query
           description: longitude of location
           required: true
@@ -227,8 +227,8 @@ paths:
         UTC).
       responses:
         '200':
-          description: OK
-          content:
+          description: The response will be a JSON object.
+          content:  
             application/json:
               schema:
                 oneOf:
@@ -251,8 +251,9 @@ components:
   schemas:
     geolocation_schema:
         title: Geolocation
-        type: object
-        
+        type: object.
+        required:
+          - token    
         properties:
           token:
             $ref: '#/components/schemas/token_schema'
@@ -336,8 +337,6 @@ components:
         Except lac and cid all other parameters mentioned below are optional.
         Parameters vary depending on the radio type. Supported radio types and their corresponding parameters are
       type: object
-      required:
-        - token
       properties:
         lac:
           $ref: '#/components/schemas/lac_schema'
