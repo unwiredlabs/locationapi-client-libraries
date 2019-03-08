@@ -24,7 +24,7 @@ paths:
             
       responses:
         '200':
-          description: 'OK'
+          description: The response will be a JSON object as defined in the model.
           content:
             application/json:
               schema:
@@ -95,7 +95,7 @@ paths:
   
       responses:
         '200':
-          description: The response will be a JSON object.
+          description: The response will be a JSON object as defined in the model.
           content:
             application/json:
               schema:
@@ -165,7 +165,7 @@ paths:
 
       responses:
         '200':
-          description: The response will be a JSON object.
+          description: The response will be a JSON object as defined in the model.
           content:
             application/json:
               schema:
@@ -185,7 +185,7 @@ paths:
       tags: 
         - Timezone
       parameters:
-        - name: lattitude
+        - name: latitude
           in: query
           description: lattitude of the location
           required: true
@@ -227,7 +227,7 @@ paths:
         UTC).
       responses:
         '200':
-          description: The response will be a JSON object.
+          description: The response will be a JSON object as defined in the model.
           content:  
             application/json:
               schema:
@@ -570,7 +570,7 @@ components:
 
     geolocation_response_schema:
       title: Geolocation response 
-      description: The response will be a JSON object.
+      description: The response will be a JSON object as defined in the model.
       properties: 
         status: 
           $ref: '#/components/schemas/status_schema'

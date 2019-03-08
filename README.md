@@ -1,7 +1,7 @@
 # locationapi-client-libraries
 This repository contains LocationAPI definition written in OpenAPI (v3) and the client libraries generated using (openapi generator)[https://openapi-generator.tech/] and samples.
 
-Please see the successfully created one in the subfolders.
+## Client libraries generated for:
 
 language  |  tested?| 
 :---------|:--------|
@@ -38,16 +38,9 @@ The `ul_api_spec_openapi3_v2_0_0` contains the specifiation of LocationAPI. It i
 
 
  ## Generate libraries:
-* The script `generate.sh` is compiled with necessary options to help build a client library.
-
-* To generate all clients:
-
-        ./generate.sh
-
-* To generate 1 client:
-
-        ./generate.sh [language]
-
+The script `generate.sh` is compiled with necessary options to help build a client library for LocationAPI.
+* To generate client libraires for all the [listed](#client-libraries-generated-for:) languages: `./generate.sh`
+* To generate a single client library for any particular language: `./generate.sh <language>`
 
     
 
