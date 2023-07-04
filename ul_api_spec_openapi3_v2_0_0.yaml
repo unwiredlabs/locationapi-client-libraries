@@ -308,6 +308,8 @@ components:
         - '"utms"'
         - '"cdma"'
         - '"lte"'
+        - '"nbiot"'
+        - '"nr"'
       example: '"gsm"'
 
 
