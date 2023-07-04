@@ -29,8 +29,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/geolocate_response_schema'
-                  - $ref: '#/components/schemas/geolocate_error_schema'
+                  - $ref: '#/components/schemas/geolocation_response_schema'
+                  - $ref: '#/components/schemas/geolocation_error_schema'
             
   /search.php:
     get:
@@ -251,7 +251,7 @@ components:
   schemas:
     geolocation_schema:
         title: Geolocation
-        type: object.
+        type: object
         required:
           - token    
         properties:
